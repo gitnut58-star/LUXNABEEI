@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รักที่สุด</title>
+    <!-- โหลด Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ตั้งค่าพื้นหลังสีชมพูอ่อนมากๆ และจัดให้เนื้อหาอยู่กึ่งกลางหน้าจอเสมอ */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fce7f3; /* Pink 100 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden; /* ป้องกันการเลื่อนที่ไม่จำเป็น */
+        }
+
+        /* แอนิเมชันหัวใจเต้นแรงขึ้น */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); } /* ขยายใหญ่ขึ้น */
+            100% { transform: scale(1); }
+        }
+
+        .heart-pulse {
+            color: #ec4899; /* Pink 600 */
+            animation: heartbeat 1s ease-in-out infinite; /* เต้นเร็วและต่อเนื่อง */
+            display: inline-block;
+        }
+
+        /* กล่องข้อความหลักที่ลอยเด่น */
+        .love-box {
+            background-color: #ffffff;
+            border: 4px solid #f9a8d4; /* Pink 300 border */
+            max-width: 90%;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.3), 0 10px 10px -5px rgba(236, 72, 153, 0.1); /* เงาชมพู */
+        }
+        
+        /* สไตล์ข้อความหลัก */
+        .main-text {
+            font-size: 3rem; /* 48px */
+            line-height: 1.1;
+        }
+        
+        @media (min-width: 640px) {
+            .main-text {
+                font-size: 6rem; /* 96px on larger screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="love-box rounded-3xl text-center transition duration-500">
+        
+        <h1 class="main-text font-extrabold text-pink-700 mb-4">
+            รักที่สุด
+        </h1>
+
+        <!-- ข้อความเล็กเสริมความรู้สึก ถูกเปลี่ยนเป็น "รักนะ" -->
+        <p class="text-xl sm:text-2xl text-gray-600 mb-8">
+            <span class="heart-pulse text-5xl sm:text-6xl mr-2">❤️</span>
+            รักนะ
+        </p>
+
+        <!-- ปุ่มที่สามารถส่งต่อความรู้สึกได้ (เมื่อกดแล้วจะแสดงข้อความ) -->
+        <button onclick="showMessage('รักที่สุดเลย!', 'ความในใจ')" 
+                class="bg-pink-600 text-white hover:bg-pink-700 font-bold py-3 px-8 rounded-full shadow-xl transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
+            คลิกเพื่อรับรัก
+        </button>
+
+    </div>
+
+    <!-- ส่วนข้อความแจ้งเตือน (Custom Modal) -->
+    <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-center transform transition-all duration-300 scale-100">
+            <h4 id="messageTitle" class="text-xl font-bold mb-3 text-pink-600"></h4>
+            <p id="messageText" class="mb-4 text-gray-700"></p>
+            <button onclick="hideMessage()" class="bg-pink-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-pink-600 transition duration-200">
+                โอเค
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ฟังก์ชันสำหรับแสดงกล่องข้อความแจ้งเตือนแทน alert()
+        function showMessage(message, title = 'แจ้งเตือน') {
+            document.getElementById('messageTitle').textContent = title;
+            document.getElementById('messageText').textContent = message;
+            document.getElementById('messageBox').classList.remove('hidden');
+            document.getElementById('messageBox').classList.add('flex');
+        }
+
+        // ฟังก์ชันสำหรับซ่อนกล่องข้อความแจ้งเตือน
+        function hideMessage() {
+            document.getElementById('messageBox').classList.add('hidden');
+            document.getElementById('messageBox').classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
+
