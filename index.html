@@ -3,106 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รักที่สุด</title>
-    <!-- โหลด Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Love Page Example</title>
+    
     <style>
-        /* ตั้งค่าพื้นหลังสีชมพูอ่อนมากๆ และจัดให้เนื้อหาอยู่กึ่งกลางหน้าจอเสมอ */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fce7f3; /* Pink 100 */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
-            overflow: hidden; /* ป้องกันการเลื่อนที่ไม่จำเป็น */
+            font-family: Arial, sans-serif;
+            background-color: #fce4ec; /* สีชมพูอ่อน */
+            text-align: center;
+            /* ทำให้ body สามารถรองรับการจัดวาง absolute ของปุ่ม "ไม่เป็น" ได้ */
+            position: relative;
         }
 
-        /* แอนิเมชันหัวใจเต้นแรงขึ้น */
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); } /* ขยายใหญ่ขึ้น */
-            100% { transform: scale(1); }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            position: relative; /* ให้ container เป็นตัวอ้างอิงสำหรับปุ่ม "ไม่เป็น" */
+            transition: opacity 0.5s ease-in-out;
         }
 
-        .heart-pulse {
-            color: #ec4899; /* Pink 600 */
-            animation: heartbeat 1s ease-in-out infinite; /* เต้นเร็วและต่อเนื่อง */
-            display: inline-block;
+        .hidden {
+            display: none !important;
         }
 
-        /* กล่องข้อความหลักที่ลอยเด่น */
-        .love-box {
-            background-color: #ffffff;
-            border: 4px solid #f9a8d4; /* Pink 300 border */
-            max-width: 90%;
-            padding: 2rem 1.5rem;
-            box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.3), 0 10px 10px -5px rgba(236, 72, 153, 0.1); /* เงาชมพู */
+        .question-text {
+            font-size: 1.5em;
+            color: #ff4081; /* สีชมพูเข้ม */
+            margin-bottom: 40px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            flex-shrink: 0; /* ป้องกันไม่ให้ปุ่มหด */
+        }
+
+        .yes-button {
+            background-color: #ff4081;
+            color: white;
+            box-shadow: 0 4px #c2185b;
+            z-index: 20; /* ให้ปุ่ม Yes อยู่ด้านบน */
+        }
+
+        .yes-button:hover {
+            background-color: #c2185b;
+        }
+
+        .no-button {
+            background-color: #f8bbd0; /* สีชมพูอ่อนกว่า */
+            color: #ff4081;
+            border: 2px solid #ff4081;
+            transition: all 0s; /* ปิด animation เมื่อมีการเคลื่อนที่ */
         }
         
-        /* สไตล์ข้อความหลัก */
-        .main-text {
-            font-size: 3rem; /* 48px */
-            line-height: 1.1;
+        /* สไตล์เมื่อปุ่ม "ไม่เป็น" ถูกเคลื่อนย้าย */
+        .no-button.floating {
+            position: absolute;
+            width: fit-content;
         }
-        
-        @media (min-width: 640px) {
-            .main-text {
-                font-size: 6rem; /* 96px on larger screens */
-            }
+
+        .small-text {
+            font-size: 0.8em;
+            color: #9c27b0;
+            margin-top: 10px;
+        }
+
+        /* Style สำหรับหน้าจอผลลัพธ์ */
+        #result-screen {
+            padding: 40px 20px;
+        }
+
+        .result-message {
+            color: #ff4081;
+            margin-bottom: 20px;
+        }
+
+        .result-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 5px solid #ff4081;
+            padding: 5px;
+            background-color: white;
+        }
+
+        .close-button {
+            background-color: #00bcd4; /* สีฟ้า */
+            color: white;
+            box-shadow: 0 4px #0097a7;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="love-box rounded-3xl text-center transition duration-500">
-        
-        <h1 class="main-text font-extrabold text-pink-700 mb-4">
-            รักที่สุด
-        </h1>
-
-        <!-- ข้อความเล็กเสริมความรู้สึก ถูกเปลี่ยนเป็น "รักนะ" -->
-        <p class="text-xl sm:text-2xl text-gray-600 mb-8">
-            <span class="heart-pulse text-5xl sm:text-6xl mr-2">❤️</span>
-            รักนะ
-        </p>
-
-        <!-- ปุ่มที่สามารถส่งต่อความรู้สึกได้ (เมื่อกดแล้วจะแสดงข้อความ) -->
-        <button onclick="showMessage('รักที่สุดเลย!', 'ความในใจ')" 
-                class="bg-pink-600 text-white hover:bg-pink-700 font-bold py-3 px-8 rounded-full shadow-xl transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
-            คลิกเพื่อรับรัก
-        </button>
-
+    <div class="container" id="main-screen">
+        <h1 class="question-text">จีบนะ เป็นแฟนกับมั้ย ❤️</h1>
+        <div class="button-group">
+            <button class="button no-button" id="no-btn">ไม่เป็น 💔</button>
+            <button class="button yes-button" id="yes-btn">เป็นแฟนกันนะ</button>
+        </div>
+        <p class="small-text">หนูจะเลือกอะไร</p>
     </div>
 
-    <!-- ส่วนข้อความแจ้งเตือน (Custom Modal) -->
-    <div id="messageBox" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-center transform transition-all duration-300 scale-100">
-            <h4 id="messageTitle" class="text-xl font-bold mb-3 text-pink-600"></h4>
-            <p id="messageText" class="mb-4 text-gray-700"></p>
-            <button onclick="hideMessage()" class="bg-pink-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-pink-600 transition duration-200">
-                โอเค
-            </button>
-        </div>
+    <div class="container hidden" id="result-screen">
+        <h2 class="result-message">เย่! หนูยอมเป็นแฟนกับพี่แล้ว</h2>
+        <img src="https://i.ibb.co/L95H86Z/cute-bears.png" alt="Milk and Mocha Hugging" class="result-image">
+        <p class="small-text">รักไอ้เด็กน้อยของพี่ที่สุดเลยยย</p>
+        <button class="button close-button" onclick="closeResult()">ปิด</button>
     </div>
 
     <script>
-        // ฟังก์ชันสำหรับแสดงกล่องข้อความแจ้งเตือนแทน alert()
-        function showMessage(message, title = 'แจ้งเตือน') {
-            document.getElementById('messageTitle').textContent = title;
-            document.getElementById('messageText').textContent = message;
-            document.getElementById('messageBox').classList.remove('hidden');
-            document.getElementById('messageBox').classList.add('flex');
-        }
+        const mainScreen = document.getElementById('main-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const container = document.getElementById('main-screen');
+        let noButtonSize = 0; // เริ่มต้นขนาดของปุ่ม "ไม่เป็น"
 
-        // ฟังก์ชันสำหรับซ่อนกล่องข้อความแจ้งเตือน
-        function hideMessage() {
-            document.getElementById('messageBox').classList.add('hidden');
-            document.getElementById('messageBox').classList.remove('flex');
+        // 1. ปุ่ม "เป็นแฟนกันนะ" (Yes)
+        yesBtn.addEventListener('click', () => {
+            // ซ่อนหน้าหลักและแสดงหน้าผลลัพธ์
+            mainScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+        });
+
+        // 2. ปุ่ม "ไม่เป็น" (No) - ทำให้ปุ่ม "ไม่เป็น" หายไป และปุ่ม "เป็น" ใหญ่ขึ้น
+        noBtn.addEventListener('mouseover', (e) => {
+            // ทำให้ปุ่ม "ไม่เป็น" ลอยและเคลื่อนที่ในขอบเขตของ body
+            noBtn.classList.add('floating');
+            
+            // กำหนดขอบเขตการเคลื่อนที่
+            const containerRect = container.getBoundingClientRect();
+            const noBtnRect = noBtn.getBoundingClientRect();
+            
+            // สุ่มตำแหน่งใหม่ภายในขอบเขตของ container
+            const newX = Math.random() * (containerRect.width - noBtnRect.width);
+            const newY = Math.random() * (containerRect.height - noBtnRect.height);
+
+            // ตั้งค่าตำแหน่งใหม่ (relative กับ container)
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+            
+            // ทำให้ปุ่ม "เป็นแฟนกันนะ" ใหญ่ขึ้นเรื่อยๆ
+            noButtonSize += 0.5;
+            const newFontSize = 1 + noButtonSize;
+            yesBtn.style.fontSize = `${newFontSize}em`;
+            yesBtn.style.padding = `${12 + (noButtonSize * 4)}px ${20 + (noButtonSize * 8)}px`;
+
+            // เปลี่ยนข้อความบนปุ่ม "ไม่เป็น"
+            const messages = ["ไม่เป็น 💔", "ไม่เอาอะ", "ไม่จริงจัง", "ไม่ดีกว่า", "ยังไม่พร้อม", "ไม่ๆๆๆ"];
+            noBtn.textContent = messages[Math.floor(Math.random() * messages.length)];
+        });
+
+        noBtn.addEventListener('click', (e) => {
+            // ป้องกันไม่ให้คลิกได้ง่ายๆ
+            e.preventDefault();
+            alert('คลิกไม่ได้นะ ลองเลือกอีกปุ่มสิ 😉');
+        });
+
+
+        // 3. ฟังก์ชันสำหรับปิดหน้าผลลัพธ์
+        function closeResult() {
+            resultScreen.classList.add('hidden');
+            mainScreen.classList.remove('hidden');
+            
+            // รีเซ็ตปุ่ม
+            noBtn.classList.remove('floating');
+            noBtn.style.left = '';
+            noBtn.style.top = '';
+            noBtn.textContent = "ไม่เป็น 💔";
+            
+            noButtonSize = 0;
+            yesBtn.style.fontSize = '1em';
+            yesBtn.style.padding = '12px 20px';
         }
     </script>
 </body>
 </html>
-
